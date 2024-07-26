@@ -20,7 +20,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 dotenv_file = BASE_DIR / ".env.local"
 
-# In our production environmet this not going to exist, so we don't going to load the dotenv file, instead we are going to have more like global environment variables
 if Path.is_file(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
 
@@ -127,21 +126,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT =  BASE_DIR / 'static' # This is going to be the folder where all the static files are going to be stored, we tel Django to look for the static files in this folder when we are in production mode, for example when we run the collectstatic command to collect all the static files in one folder to be served by the web server like Nginx or Apache, if you don't specify this folder, Django is going to look for the static files in the static folder of each app, but this is not recommended for production, because it is going to be slow to serve the static files, so we need to collect all the static files in one folder and serve them from there.                                                                                                                                                   
+STATIC_ROOT =  BASE_DIR / 'static'
+                                                                                                                                           
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media' # This is going to be the folder where all the media files are going to be stored, for example the images that the users upload to the server, we need to specify this folder to tell Django where to store the media files, for example when we upload an image to the server, Django is going to store the image in this folder.
-
-# Diff between static and media files is that static files are the files that are not going to change, for example the CSS files, the JavaScript files, the images that are part of the design of the website, the media files are the files that are going to be uploaded by the users, for example the images that the users upload to the server, the videos that the users upload to the server, the audio files that the users upload to the server, so the media files are the files that are going to be uploaded by the users, the static files are the files that are part of the design of the website.
+MEDIA_ROOT = BASE_DIR / 'media'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
 		'rest_framework_simplejwt.authentication.JWTAuthentication',
 	],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated', # This is going to make all the endpoints to be protected, so we need to add the permission classes to the views that we want to protect, for example in the views.py file:
-        # from rest_framework.permissions import IsAuthenticated
-        # class MyView(APIView):
-        #     permission_classes = [IsAuthenticated]
+        'rest_framework.permissions.IsAuthenticated',
     ]
 }
 
@@ -151,10 +146,13 @@ DJOSER = {
     'ACTIVATION_URL': 'activate/{uid}/{token}',
     'USER_CREATE_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
-    'TOKEN_MODEL': None, # TOKEN_MODEL is a model that is going to be used to store the tokens in the database, but we don't want to store the tokens in the database, to learn more visit: https://djoser.readthedocs.io/en/latest/settings.html#token-model
+    'TOKEN_MODEL': None,
 }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AUTH_USER_MODEL = 'users.User'
