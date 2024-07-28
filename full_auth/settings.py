@@ -142,11 +142,16 @@ REST_FRAMEWORK = {
 
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'password-reset/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': False,
+    'ACTIVATION_URL': None,
     'USER_CREATE_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_URL': 'password-reset/{uid}/{token}',
     'TOKEN_MODEL': None,
+    'USER_DELETE_ENABLE': True,
+    'SERIALIZERS': {
+        'user_delete': 'users.serializers.CustomUserDeleteSerializer',
+    },
 }
 
 # Default primary key field type
