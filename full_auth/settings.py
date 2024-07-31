@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'rest_framework',
+	'social_django',
 	'djoser',
 	'users',
 	'corsheaders',
@@ -65,6 +66,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+AUTHENTICATION_BACKENDS = [
+	'social_core.backends.google.GoogleOAuth2',
+	'django.contrib.auth.backends.ModelBackend',
 ]
 
 ROOT_URLCONF = 'full_auth.urls'
@@ -156,6 +162,15 @@ AUTH_COOKIE_HTTP_ONLY = True
 AUTH_COOKIE_PATH = '/'
 AUTH_COOKIE_SAMESITE = 'None'
 
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = getenv('GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = getenv('GOOGLE_OAUTH2_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+	'https://www.googleapis.com/auth/userinfo.profile',
+	'openid',
+]
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name', 'last_name']
+
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'password-reset/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': False,
@@ -168,6 +183,7 @@ DJOSER = {
     'SERIALIZERS': {
         'user_delete': 'users.serializers.CustomUserDeleteSerializer',
     },
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': getenv('ALLOWED_REDIRECT_URIS').split(','),
 }
 
 # Default primary key field type

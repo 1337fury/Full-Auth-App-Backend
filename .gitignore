@@ -1,0 +1,16 @@
+.env
+.DS_STORE
+migrations
+__pycache__
+*/bin
+*/include
+*/lib
+pyvenv.cfg
+db.sqlite3
+logs
+
+.env*
+db.sqlite3
+
+/venv
+txt*

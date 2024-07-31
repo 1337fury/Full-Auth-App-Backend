@@ -13,6 +13,7 @@ from rest_framework_simplejwt.views import (
 	TokenRefreshView,
 	TokenVerifyView,
 )
+from djoser.social.views import ProviderAuthView
 
 class CustomUserViewSet(UserViewSet):
     def destroy(self, request, *args, **kwargs):
@@ -100,3 +101,30 @@ class LogoutView(APIView):
 		response.delete_cookie('refresh')
 		return response
 
+class CustomProviderAuthView(ProviderAuthView):
+	def post(self, request, *args, **kwargs):
+		response = super().post(request, *args, **kwargs)
+
+		if response.status_code == 201:
+			access = response.data['access']
+			response.set_cookie(
+				key='access',
+				value=access,
+				max_age=django_settings.AUTH_COOKIE_ACCESS_MAX_AGE,
+				secure=django_settings.AUTH_COOKIE_SECURE,
+				httponly=django_settings.AUTH_COOKIE_HTTP_ONLY,
+				samesite=django_settings.AUTH_COOKIE_SAMESITE,
+				path=django_settings.AUTH_COOKIE_PATH
+			)
+			refresh = response.data['refresh']
+			response.set_cookie(
+				key='refresh',
+				value=refresh,
+				max_age=django_settings.AUTH_COOKIE_REFRESH_MAX_AGE,
+				secure=django_settings.AUTH_COOKIE_SECURE,
+				httponly=django_settings.AUTH_COOKIE_HTTP_ONLY,
+				samesite=django_settings.AUTH_COOKIE_SAMESITE,
+				path=django_settings.AUTH_COOKIE_PATH
+			)
+
+		return response
